@@ -1,10 +1,28 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import Head from 'next/head'
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { GET_ALL_POSTS } from '../graphql/queries';
+import { useRouter } from 'next/router'
 
 export default function Home({ posts }) {
-  console.log(posts);
+  const [articles, setArticles] = useState([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Replace 'https://your-strapi-app.herokuapp.com' with your actual Strapi app URL
+    fetch('https://strapi-gatsby-blog-demo.herokuapp.com/api/articles')
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data.data);  // log the data
+        setArticles(data.data)
+      })
+      .catch(error => console.error(error));
+  }, []);
+
+  const handleClick = (id) => {
+    router.push(`/${id}`)
+  }
+
   return (
     <div>
       <Head>
@@ -17,7 +35,7 @@ export default function Home({ posts }) {
       <br />
       <h2>All posts</h2>
       <br />
-      {posts.map((val, i) => {
+      {/* {posts.map((val, i) => {
         return (
           <Link key={i} href={val.attributes.urlSlug}>
             <a>
@@ -28,25 +46,17 @@ export default function Home({ posts }) {
             </a>
           </Link>
         )
-      })}
+      })} */}
+
+      <h1>Articles</h1>
+      {articles.map((article, i) => (
+        <div key={article?.attributes?.id} className="card" onClick={() => handleClick(article?.id)}>
+          <a>
+            <h2>{article?.attributes?.title}</h2>
+            <p>{article?.attributes?.description}</p>
+          </a>
+        </div>
+      ))}
     </div>
   )
-}
-
-export async function getStaticProps() {
-
-  const client = new ApolloClient({
-    uri: "http://localhost:1337/graphql",
-    cache: new InMemoryCache()
-  });
-
-  const { data } = await client.query({
-    query: GET_ALL_POSTS
-  })
-
-  return {
-    props: {
-      posts: data.blogPosts.data
-    }
-  }
 }
