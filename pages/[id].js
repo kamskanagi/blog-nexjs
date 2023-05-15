@@ -1,5 +1,6 @@
-
 import { useEffect, useState } from 'react';
+import axios from 'axios';
+import https from 'https';
 
 function Article({ article }) {
     // you can now use article directly in your component
@@ -15,9 +16,14 @@ function Article({ article }) {
 export async function getServerSideProps(context) {
     const { id } = context.query;
 
-    const res = await fetch(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`);
-    const data = await res.json();
-    console.log(data.data)
+    const agent = new https.Agent({  
+      rejectUnauthorized: false
+    });
+
+    const res = await axios.get(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`, { httpsAgent: agent });
+    const data = res.data;
+    //console.log(data.data)
+
     return {
         props: {
             article: data.data, // the response should be the article object directly
@@ -26,6 +32,40 @@ export async function getServerSideProps(context) {
 }
 
 export default Article;
+
+
+
+
+
+
+
+// import { useEffect, useState } from 'react';
+
+// function Article({ article }) {
+//     // you can now use article directly in your component
+//     return (
+//         <div>
+//             <h1>{article?.attributes?.title}</h1>
+//             <p>{article?.attributes?.description}</p>
+//             <div dangerouslySetInnerHTML={{ __html: article?.attributes?.content }} />
+//         </div>
+//     );
+// }
+
+// export async function getServerSideProps(context) {
+//     const { id } = context.query;
+
+//     const res = await fetch(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`);
+//     const data = await res.json();
+//     console.log(data.data)
+//     return {
+//         props: {
+//             article: data.data, // the response should be the article object directly
+//         },
+//     };
+// }
+
+// export default Article;
 
 
 // import { ApolloClient, InMemoryCache } from '@apollo/client';
