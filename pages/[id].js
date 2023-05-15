@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-import https from 'https';
 
 function Article({ article }) {
-    // you can now use article directly in your component
+    // You can now use the article directly in your component
     return (
         <div>
             <h1>{article?.attributes?.title}</h1>
@@ -13,25 +11,78 @@ function Article({ article }) {
     );
 }
 
-export async function getServerSideProps(context) {
-    const { id } = context.query;
+export async function getStaticProps({ params }) {
+    const { id } = params;
 
-    const agent = new https.Agent({  
-      rejectUnauthorized: false
-    });
-
-    const res = await axios.get(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`, { httpsAgent: agent });
+    const res = await axios.get(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`);
     const data = res.data;
-    //console.log(data.data)
 
     return {
         props: {
-            article: data.data, // the response should be the article object directly
+            article: data.data,
         },
     };
 }
 
+export async function getStaticPaths() {
+    // Assuming you have a list of article IDs available
+    const articleIds = ['1', '2', '3', '4']; // Replace with your actual article IDs
+
+    const paths = articleIds.map((id) => {
+        return { params: { id: id.toString() } };
+    });
+
+    return {
+        paths,
+        fallback: false, // Set to true if there are more dynamic routes to handle
+    };
+}
+
 export default Article;
+
+
+
+
+
+
+
+
+
+
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import https from 'https';
+
+// function Article({ article }) {
+//     // you can now use article directly in your component
+//     return (
+//         <div>
+//             <h1>{article?.attributes?.title}</h1>
+//             <p>{article?.attributes?.description}</p>
+//             <div dangerouslySetInnerHTML={{ __html: article?.attributes?.content }} />
+//         </div>
+//     );
+// }
+
+// export async function getServerSideProps(context) {
+//     const { id } = context.query;
+
+//     const agent = new https.Agent({  
+//       rejectUnauthorized: false
+//     });
+
+//     const res = await axios.get(`https://strapi-gatsby-blog-demo.herokuapp.com/api/articles/${id}`, { httpsAgent: agent });
+//     const data = res.data;
+//     //console.log(data.data)
+
+//     return {
+//         props: {
+//             article: data.data, // the response should be the article object directly
+//         },
+//     };
+// }
+
+// export default Article;
 
 
 
