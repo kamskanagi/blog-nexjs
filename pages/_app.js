@@ -6,6 +6,7 @@ function MyApp({ Component, pageProps }) {
     <div className='app_wrapper'>
       <Nav />
       <Component {...pageProps} />
+
     </div>
   )
 }
