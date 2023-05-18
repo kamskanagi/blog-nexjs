@@ -7,6 +7,39 @@ body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    
+           
+.headerTitle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Lora', sans-serif;
+    color: #444;
+
+}
+
+.headerTitleSm{
+    position: absolute;
+    top: 21%;
+    font-size: 20px;
+
+}
+
+
+.headerTitleLg{
+    position: absolute;
+    top: 26%;
+    font-size: 100px;
+    
+}
+
+    .headerImg{
+        width: 100%;
+        height: 250px;
+        margin-top: 80px;
+    }
+        
+
 }
 
 a {
